@@ -1,0 +1,65 @@
+# If you need more help, visit the Docker Compose reference guide at
+# https://docs.docker.com/go/compose-spec-reference/
+
+# You can add other services your application may depend on here, such as a
+# database or a cache. For examples, see the Awesome Compose repository:
+# https://github.com/docker/awesome-compose
+services:
+  backend:
+    build:
+      context: ./backend/
+      dockerfile: Dockerfile/production.Dockerfile
+    volumes:
+      - ./backend:/app
+    secrets:
+      - db-password
+    environment:
+      - DJANGO_SETTINGS_MODULE=backend.settings.production
+
+    # mkdir -p /app/static /app/media && chmod -R 755 /app/static /app/media &&
+    command: >
+      sh -c "python manage.py collectstatic --noinput &&
+             gunicorn --bind 0.0.0.0:8000 backend.wsgi:application"
+
+
+# server:
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres
+    restart: always
+#    user: postgres
+    secrets:
+      - db-password
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: example
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD_FILE: /run/secrets/db-password
+    expose:
+      - 5432
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  nginx:
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - backend
+
+
+volumes:
+  db-data:
+secrets:
+  db-password:
+    file: db/password.txt
+
