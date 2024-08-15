@@ -1,0 +1,26 @@
+{% extends "adminlte/login.html" %}
+
+{% load static %}
+{% load django_htmx %}
+
+{% block extra_js %}
+    <!-- HTMX JS -->
+    <script src="{% static 'htmx/htmx.min.js' %}" defer></script>
+
+    <!-- HTMX Extension Script -->
+    {% django_htmx_script %}
+
+    <!-- Add any other custom JS here -->
+{% endblock %}
+
+<!-- Login -->
+
+{% block body %}
+	{% block login_form %}
+        <form method="post">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" value="Submit">
+        </form>
+    {% endblock %}
+{% endblock %}

@@ -54,6 +54,8 @@ SECRET_KEY = 'django-insecure-(-oe#et7h*sb9d@e70y-gm7h#qnoe0-(&b)^l9%!b=6f7k^x7&
 # Application definition
 
 INSTALLED_APPS = [
+    'adminlte3',
+    'adminlte3_theme',
     'menu.apps.MenuConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -62,6 +64,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "django_htmx",
+    "bootstrap5",
 ]
 
 MIDDLEWARE = [
@@ -80,7 +83,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, './templates')],
+        'DIRS': [os.path.join(BASE_DIR, './menu/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -158,3 +161,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Custom menu user
 AUTH_USER_MODEL = "menu.User"
+
+
+# Redirection URLs
+LOGIN_REDIRECT_URL = '/dashboard/'
+LOGOUT_REDIRECT_URL = '/login/'
+LOGIN_URL = '/login/'
+LOGOUT_URL = '/logout/'
+

@@ -7,3 +7,4 @@ django-environ==0.11.2
 gunicorn
 requests
 django-htmx
+django-bootstrap-v5

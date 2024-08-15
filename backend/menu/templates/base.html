@@ -1,0 +1,36 @@
+{% load static %}
+{% load django_htmx %}
+
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Dashboard{% endblock %}</title>
+
+    <!-- AdminLTE CSS -->
+    <link rel="stylesheet" href="{% static 'admin-lte/dist/css/adminlte.min.css' %}">
+    <link rel="stylesheet" href="{% static 'admin-lte/plugins/fontawesome-free/css/all.min.css' %}">
+    <!-- Add any other CSS files you need from AdminLTE -->
+    
+    <!-- HTMX JS -->
+    <script src="{% static 'htmx/htmx.min.js' %}" defer></script>
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        {% block content %}
+        <!-- Main content will go here -->
+        {% endblock %}
+    </div>
+
+    <!-- AdminLTE JS -->
+    <script src="{% static 'admin-lte/plugins/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'admin-lte/dist/js/adminlte.min.js' %}"></script>
+    <!-- Add any other JS files you need from AdminLTE -->
+
+    <!-- HTMX Extension Script -->
+    {% django_htmx_script %}
+</body>
+</html>
