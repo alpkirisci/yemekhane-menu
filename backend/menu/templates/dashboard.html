@@ -22,5 +22,6 @@
         </div>
     </div>
 </section>
-    <a hx-get="{% url 'menu:logout' %}">logout</a>
+{#    <a hx-get="{% url 'authentication:logout' %}" >logout</a>#}
+    <a href="{% url 'authentication:logout' %}" >logout</a>
 {% endblock %}
