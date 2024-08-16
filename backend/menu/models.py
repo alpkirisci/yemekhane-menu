@@ -1,13 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
-from django.utils import timezone
-
-# Custom User model
-class User(AbstractUser):
-    tshirt_color = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.username
+from django.conf import settings
 
 # Category model
 class Category(models.Model):
@@ -46,9 +38,9 @@ class MenuItem(models.Model):
     calories = models.IntegerField()
     description = models.TextField(blank=True, null=True)
     ingredients = models.ManyToManyField(Ingredient)
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='menu_items_created')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='menu_items_created')
     created_at = models.DateField(auto_now_add=True)
-    updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='menu_items_updated')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='menu_items_updated')
     updated_at = models.DateField(auto_now=True)
 
     def __str__(self):
@@ -59,9 +51,9 @@ class DailyMenu(models.Model):
     served_at = models.DateField()
     menu_items = models.ManyToManyField(MenuItem)
     servings = models.IntegerField(default=0)
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='daily_menus_created')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='daily_menus_created')
     created_at = models.DateField(auto_now_add=True)
-    updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='daily_menus_updated')
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='daily_menus_updated')
     updated_at = models.DateField(auto_now=True)
 
     def __str__(self):

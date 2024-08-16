@@ -62,6 +62,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "django_htmx",
+    'authentication.apps.AuthenticationConfig',
+]
+
+AUTHENTICATION_BACKENDS = [
+    'authentication.backends.CustomBackend',  # Custom backend goes here
+    # 'django.contrib.auth.backends.ModelBackend',  # Default backend
 ]
 
 MIDDLEWARE = [
@@ -80,7 +86,8 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, './templates')],
+        'DIRS': [os.path.join(BASE_DIR, './menu/templates'),
+                 os.path.join(BASE_DIR, './authentication/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -157,4 +164,12 @@ MEDIA_URL = 'media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Custom menu user
-AUTH_USER_MODEL = "menu.User"
+AUTH_USER_MODEL = "authentication.User"
+
+
+# Redirection URLs
+LOGIN_REDIRECT_URL = 'menu:dashboard'
+LOGOUT_REDIRECT_URL = '/authentication/login'
+LOGIN_URL = 'authentication:login'
+LOGOUT_URL = 'authentication:logout'
+

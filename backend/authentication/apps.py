@@ -1,5 +1,6 @@
 from django.apps import AppConfig
 
-class MenuConfig(AppConfig):
+
+class AuthenticationConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'menu'
+    name = 'authentication'

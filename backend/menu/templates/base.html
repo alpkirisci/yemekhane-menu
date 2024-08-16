@@ -1,0 +1,40 @@
+{% load static %}
+{% load django_htmx %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Dashboard{% endblock %}</title>
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    {% block extra_css %}
+    {% endblock %}
+
+    <!-- HTMX JS -->
+    <script src="{% static 'htmx/htmx.min.js' %}" defer></script>
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        {% block content %}
+        <!-- Main content will go here -->
+        {% endblock %}
+    </div>
+
+    <!-- jQuery -->
+    <script src="{% static 'jquery/jquery-3.7.1.min.js' %}"></script>
+    <!-- Bootstrap JS + Popper-->
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.js' %}"></script>
+
+    <!-- HTMX Extension Script -->
+    {% django_htmx_script %}
+
+
+    <!-- Custom JS -->
+    {% block extra_js %}
+
+    {% endblock %}
+</body>
+</html>
