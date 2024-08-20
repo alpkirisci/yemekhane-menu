@@ -1,0 +1,33 @@
+/* navbar.css */
+
+/* Custom background color */
+.navbar.bg-custom {
+    background-color: #004a64;
+    padding-left:30px;
+}
+
+/* Custom font color and weight */
+.navbar .nav-link {
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+/* Hover effect for links */
+.navbar .nav-link:hover {
+    color: #96c3ea !important;
+}
+
+/* Custom brand image size and margin */
+.navbar-brand img {
+    height: 50px; /* Adjust the height as needed */
+    margin-bottom:10px;
+}
+
+/* Adjust the toggler icon color for the dark background */
+.navbar-toggler {
+    margin-right:15px;
+}
+
+#navbarNav li{
+    padding:10px;
+}

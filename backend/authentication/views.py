@@ -1,26 +1,24 @@
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.views import LoginView
-from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import redirect
 
 from .forms import CustomAuthenticationForm
-from django.contrib.auth.views import LogoutView
-from django.urls import reverse_lazy
+from django.urls import reverse
+
 
 class CustomLoginView(LoginView):
     form_class = CustomAuthenticationForm
     template_name = 'login.html'
 
+# if the user is logged in redirect to dashboard
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect(reverse('menu:dashboard'))
+        return super().dispatch(request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs):
-        # Print out the POST data for debugging
-        print("POST data:", request.POST)
-        return super().post(request, *args, **kwargs)
+
 
     def form_valid(self, form):
-        # Ensure that all form data is being processed correctly
-        print(50 * "*")
-        print("Form is valid. Cleaned data:", form.cleaned_data)
-        print(50 * "*")
 
         user = authenticate(
             request=self.request,
@@ -28,6 +26,7 @@ class CustomLoginView(LoginView):
             password=form.cleaned_data['password'],
             tshirt_color=form.cleaned_data['tshirt_color']
         )
+
         if user is not None:
             login(self.request, user)
             return super().form_valid(form)
@@ -36,6 +35,7 @@ class CustomLoginView(LoginView):
             return self.form_invalid(form)
 
 
+# Redirect to the login page after logout
 def custom_logout(request):
-    # Redirect to the login page after logout
     logout(request)
+

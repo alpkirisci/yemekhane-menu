@@ -2,39 +2,60 @@
 {% load django_htmx %}
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Admin Dashboard{% endblock %}</title>
+{#    Libraries#}
     <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'fontawesome-free-6.6.0-web/css/all.css' %}" rel="stylesheet">
+
+    {# Generic&Component CSS #}
+    <link href="{% static 'menu/css/navbar.css' %}" rel="stylesheet">
+    <link href="{% static 'menu/css/footer.css' %}" rel="stylesheet">
+    <link href="{% static 'menu/css/base.css' %}" rel="stylesheet">
+    <link href="{% static 'menu/css/list.css' %}" rel="stylesheet">
 
     <!-- Custom CSS -->
     {% block extra_css %}
+
     {% endblock %}
 
     <!-- HTMX JS -->
     <script src="{% static 'htmx/htmx.min.js' %}" defer></script>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
-    <div class="wrapper">
+    <div class="wrapper d-flex flex-column min-vh-100">
+        {% include 'components/navbar.html' %}
+
         {% block content %}
         <!-- Main content will go here -->
         {% endblock %}
+
+        {% include 'components/footer.html' %}
     </div>
+
+{#    font-awesome#}
+    <script src="{% static 'fontawesome-free-6.6.0-web/js/all.js' %}"></script>
+
 
     <!-- jQuery -->
     <script src="{% static 'jquery/jquery-3.7.1.min.js' %}"></script>
-    <!-- Bootstrap JS + Popper-->
-    <script src="{% static 'bootstrap/js/bootstrap.bundle.js' %}"></script>
+    <!-- Development version -->
+    <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
+
+    <!-- Bootstrap JS-->
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
 
     <!-- HTMX Extension Script -->
     {% django_htmx_script %}
 
+    {# Generic&Component JS #}
+    <script src="{% static 'menu/js/list.js' %}"></script>
 
     <!-- Custom JS -->
     {% block extra_js %}
-
     {% endblock %}
 </body>
 </html>

@@ -1,0 +1,38 @@
+{% load custom_filters %}
+
+
+<tr id="{{ model_name }}-{{ item.id }}">
+    <form id="form-{{ model_name }}-{{ item.id }}"
+          hx-put="{% url 'menu:update_row' pk=item.id model_name=model_name %}"
+          hx-target="#{{ model_name }}-{{ item.id }}"
+          hx-swap="outerHTML"
+          hx-trigger="update">
+        {% csrf_token %}
+{#        Since the form will be replaced we need to include the csrf_token with js look into list.js#}
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+        <th scope="row" class="id-column">{{ item.id }}</th>
+
+        {% for field in fields %}
+            <td class="align-middle">
+                <input type="text" name="{{ field }}" class="form-control form-control-sm w-auto" style="max-width: 100%;" value="{{ item|get_attr:field }}">
+            </td>
+        {% endfor %}
+        <td class="actions-column">
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-sm btn-success rounded-pill me-1"
+                onclick='triggerRecordUpdate("form-{{ model_name }}-{{ item.id }}", "update")'>
+                <i class="fas fa-check"></i>
+            </button>
+
+
+            <!-- Cancel Button with hx-get -->
+            <button type="button" class="btn btn-sm btn-danger rounded-pill"
+                    hx-get="{% url 'menu:cancel_edit' pk=item.id model_name=model_name %}"
+                    hx-target="#{{ model_name }}-{{ item.id }}"
+                    hx-swap="outerHTML">
+                <i class="fas fa-times"></i>
+            </button>
+        </td>
+    </form>
+</tr>

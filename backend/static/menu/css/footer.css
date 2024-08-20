@@ -1,0 +1,14 @@
+/* footer.css */
+
+footer {
+    background-color: #004a64;
+    color: #ffffff;
+}
+
+footer img {
+    height: 40px;
+}
+
+footer p {
+    margin: 0;
+}

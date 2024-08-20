@@ -67,7 +67,7 @@ INSTALLED_APPS = [
 
 AUTHENTICATION_BACKENDS = [
     'authentication.backends.CustomBackend',  # Custom backend goes here
-    # 'django.contrib.auth.backends.ModelBackend',  # Default backend
+    'django.contrib.auth.backends.ModelBackend',  # Default backend
 ]
 
 MIDDLEWARE = [

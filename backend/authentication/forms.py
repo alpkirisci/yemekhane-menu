@@ -16,11 +16,22 @@ class CustomAuthenticationForm(AuthenticationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['tshirt_color'].label = 'T-shirt Rengi'
+        self.fields['username'].label = 'Kullanıcı Adı'
+        self.fields['password'].label = 'Parola'
+
         self.fields['tshirt_color'].widget.attrs.update({
-            'placeholder': 'T-Shirt Color'
+            'placeholder': 'T-shirt Rengi',
         })
-        for field in self.fields.values():
-            field.widget.attrs.update({
-                'class': 'form-control',
-            })
+        self.fields['username'].widget.attrs.update({
+            'placeholder': 'Kullanıcı Adı',
+        })
+        self.fields['password'].widget.attrs.update({
+            'placeholder': 'Parola',
+        })
+
+        # for field in self.fields.values():
+        #     field.widget.attrs.update({
+        #
+        #     })
 

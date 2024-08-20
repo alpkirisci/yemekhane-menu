@@ -1,0 +1,42 @@
+{% load static %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-custom">
+    <a class="navbar-brand" href="{% url 'menu:dashboard' %}">
+        <img src="{% static 'menu/images/logo.png' %}" alt="Brand Logo" height="40">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'menu:dashboard' %}">Günlük Menü</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'menu:monthly_menu' %}">Aylık Menü</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            {% if user.is_authenticated %}
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Panel
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="{% url 'menu:dashboard' %}">Action</a></li>
+                    <li><a class="dropdown-item" href="{% url 'menu:dashboard' %}">Another action</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{% url 'menu:dashboard' %}">Something else here</a></li>
+                  </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'authentication:logout' %}">Çıkış Yap</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'authentication:login' %}">Personel Girişi</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>

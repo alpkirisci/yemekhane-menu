@@ -1,33 +1,40 @@
 {% extends "base.html" %}
+{% load static %}
+{% load authentication_filter %}
 
 {% block title %}Login{% endblock %}
+
+{% block extra_css %}
+    <link href="{% static 'authentication/css/login.css' %}" rel="stylesheet">
+
+{% endblock %}
 
 {% block content %}
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-4">
             <div class="text-center mb-4">
-                <h1><b>Cafeteria</b> Dashboard</h1>
-                <p class="text-muted">Sign in to start your session</p>
+                <h1 class="text-light"><b>Yemekhane</b> Panel</h1>
+                <p class="text-muted">Lütfen giriş yapınız</p>
             </div>
 
-            <div class="card">
+            <div class="card bg-dark text-light">
                 <div class="card-body">
                     <form action="{% url 'authentication:login' %}" method="post">
                         {% csrf_token %}
                         <div class="form-group mb-3">
                             {{ form.username.label_tag }}
-                            {{ form.username }}
+                            {{ form.username|add_class:"form-control bg-dark text-light border-secondary" }}
                         </div>
                         <div class="form-group mb-3">
                             {{ form.password.label_tag }}
-                            {{ form.password }}
+                            {{ form.password|add_class:"form-control bg-dark text-light border-secondary" }}
                         </div>
                         <div class="form-group mb-3">
                             {{ form.tshirt_color.label_tag }}
-                            {{ form.tshirt_color }}
+                            {{ form.tshirt_color|add_class:"form-control bg-dark text-light border-secondary" }}
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                        <button type="submit" class="btn btn-primary w-100">Giriş</button>
                     </form>
 
                     {% if form.non_field_errors %}
