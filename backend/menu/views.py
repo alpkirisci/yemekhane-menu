@@ -1,10 +1,13 @@
+from datetime import timedelta
+
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse, QueryDict
 from django.shortcuts import render, get_object_or_404
+from django.utils.datetime_safe import datetime
 from django.views.generic import ListView, TemplateView
 
-from menu.forms import CustomModelFormFactory
-from menu.models import Ingredient, Category
+from menu.forms import create_custom_model
+from menu.models import Ingredient, Category, DailyMenu
 
 from django.apps import apps
 from django.http import Http404
@@ -22,6 +25,7 @@ class CustomListView(ListView):
     model = None
     list_title = None
     attr_titles = None
+
     def get(self, request, *args, **kwargs):
         # Get the model's fields and verbose names
         fields = [field.name for field in self.model._meta.fields if field.name != 'id']
@@ -41,6 +45,7 @@ class CustomListView(ListView):
 class IngredientListView(CustomListView):
     model = Ingredient
     template_name = 'generic/list.html'  # Your template
+    # TODO: Need Translate
     list_title = 'Malzemeler'
     attr_titles = ["İsim", "Birim"]
 
@@ -84,7 +89,7 @@ def update_row(request, pk, model_name):
         put_data = QueryDict(request.body.decode('utf-8'))
 
         # Create a form instance with the parsed data and the existing item instance
-        form = CustomModelFormFactory(model, put_data, instance=item)
+        form = create_custom_model(model, put_data, instance=item)
 
         if form.is_valid():
             form.save()
@@ -113,6 +118,7 @@ def delete_row(request, pk, model_name):
 
 
 # ONLY WORKS WITH THE MENU APP
+# only use with generic methods or views
 def get_model_by_name(model_name):
     try:
         return apps.get_model(app_label="menu", model_name=model_name)
@@ -126,21 +132,23 @@ class MonthlyMenuView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # Example: Generate a list of dates for the current month
         today = datetime.today()
         first_day_of_month = today.replace(day=1)
         last_day_of_month = (first_day_of_month + timedelta(days=32)).replace(day=1) - timedelta(days=1)
 
+        month_objects = DailyMenu.objects.filter(served_at__month=today.month, served_at__year=today.year)
+
         current_month_days = []
         for day in range(first_day_of_month.day, last_day_of_month.day + 1):
             current_day = first_day_of_month.replace(day=day)
-            # Assume you have a method to get the menu for each day
-            daily_menu = self.get_daily_menu_for_date(current_day)
+
+            try:
+                daily_menu = month_objects.get(served_at=current_day)
+
+            except DailyMenu.DoesNotExist:
+                daily_menu = None
+
             current_month_days.append({'date': current_day, 'menu': daily_menu})
 
         context['current_month_days'] = current_month_days
         return context
-
-    def get_daily_menu_for_date(self, date):
-        # Implement your logic to get the menu for a specific date
-        return "Sample menu for " + date.strftime("%Y-%m-%d")

@@ -40,7 +40,7 @@ class MenuItem(models.Model):
 
 
 class DailyMenu(models.Model):
-    served_at = models.DateField()
+    served_at = models.DateField(unique_for_date=True)
     menu_items = models.ManyToManyField(MenuItem)
     servings = models.IntegerField()
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='created_daily_menus')

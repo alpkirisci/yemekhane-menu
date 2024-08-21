@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Aylık Menü{% endblock %}
+{% block extra_css %}
+    <link href="{% static 'menu/css/monthly_menu.css' %}" rel="stylesheet">
+
+{% endblock %}
+
+{% block content %}
+    {% for day in current_month_days %}
+        <h6>{{ day.date }}</h6>
+        <p>{{ day.menu }}</p>
+    {% endfor %}
+{% endblock %}
+
+{% block extra_js %}
+
+{% endblock %}
