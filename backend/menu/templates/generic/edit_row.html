@@ -3,12 +3,12 @@
 
 <tr id="{{ model_name }}-{{ item.id }}">
     <form id="form-{{ model_name }}-{{ item.id }}"
-          hx-put="{% url 'menu:update_row' pk=item.id model_name=model_name %}"
+          hx-put="{% url 'menu:ingredient-update_row' pk=item.id %}"
           hx-target="#{{ model_name }}-{{ item.id }}"
           hx-swap="outerHTML"
           hx-trigger="update">
         {% csrf_token %}
-{#        Since the form will be replaced we need to include the csrf_token with js look into list.js#}
+{#      Since the row gets replaced need to add csrf_token to the request manually see static/menu/js/list.js#}
         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
         <th scope="row" class="id-column">{{ item.id }}</th>
@@ -19,16 +19,14 @@
             </td>
         {% endfor %}
         <td class="actions-column">
-            <!-- Submit Button -->
             <button type="submit" class="btn btn-sm btn-success rounded-pill me-1"
                 onclick='triggerRecordUpdate("form-{{ model_name }}-{{ item.id }}", "update")'>
                 <i class="fas fa-check"></i>
             </button>
 
 
-            <!-- Cancel Button with hx-get -->
             <button type="button" class="btn btn-sm btn-danger rounded-pill"
-                    hx-get="{% url 'menu:cancel_edit' pk=item.id model_name=model_name %}"
+                    hx-get="{% url 'menu:ingredient-get_row' pk=item.id %}"
                     hx-target="#{{ model_name }}-{{ item.id }}"
                     hx-swap="outerHTML">
                 <i class="fas fa-times"></i>

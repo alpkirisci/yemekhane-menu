@@ -1,0 +1,55 @@
+
+<div class="container my-4">
+    <div class="card bg-dark text-white">
+        <div class="card-body">
+            <h2 class="card-title">Malzeme İhtiyaç Raporu</h2>
+            <p class="card-text">Dilediğiniz zaman aralığında kullanılacak malzemele ihtiyacını görüntülemek için lütfen başlangıç ve bitiş tarihlerini seçin.</p>
+            <form id="form-ingredient-requirements"
+                  hx-get="{% url 'menu:ingredient-requirements-table' %}"
+                  hx-target="#requirements-table"
+                  hx-swap="innerHTML"
+            >
+                {% csrf_token %}
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="start_date" class="form-label">Başlangıç Tarihi</label>
+                        <input type="date" class="form-control bg-dark text-white date-input" id="start_date" name="start_date" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="end_date" class="form-label">Bitiş Tarihi</label>
+                        <input type="date" class="form-control bg-dark text-white date-input" id="end_date" name="end_date" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3 col-md-12 border-0"
+                        id="requirements-submit"
+                >Oluştur</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Custom styling for datepicker button visibility */
+    .date-input::-webkit-calendar-picker-indicator {
+        filter: invert(1);
+    }
+
+    #requirements-submit{
+        background-color: #004a64;
+        border-color: whitesmoke;
+    }
+
+    #requirements-submit:hover{
+        background-color:  #00384b;
+    }
+</style>
+
+<script>
+    // Trigger the datepicker when the input field is focused
+    document.querySelectorAll('.date-input').forEach(function(input) {
+        input.addEventListener('focus', function() {
+            this.showPicker();
+        });
+    });
+</script>

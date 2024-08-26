@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+
+{% block title %}Günlük Menü{% endblock %}
+
+{% block extra_css %}
+    <link href="menu/css/daily_menu.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="container my-5">
+        <div class="text-center mb-4">
+            <h1>Günlük Menü</h1>
+            <p class="lead">{{ today|date:"F j, Y" }}</p>
+        </div>
+        {% if menu %}
+            {% for category in categories %}
+                {% if menu|category_in_menu_items:category %}
+                    <div class="mb-4 text-center">
+                        <h4 class="border-bottom pb-2">{{ category.name }}</h4>
+                        <div class="row justify-content-center">
+                        {% with menu_items=menu.menu_items|get_menu_item_with_category:category %}
+                            {% for item in menu_items %}
+                                <div class="col-md-4 mb-4 text-start">
+                                    <div class="card h-100 bg-dark text-white">
+                                        <div class="card-header">
+                                            <h5 class="card-title">{{ item.name }}</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="card-text"><strong>Kalori:</strong> {{ item.calories }} kcal</p>
+                                            <p class="card-text"><strong>Tarif:</strong> {{ item.description }}</p>
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item bg-transparent text-white p-lg-0 border-bottom-0 "><strong>Malzemeler:</strong></li>
+                                                {% for ingredient_item in item.ingredients.all %}
+                                                    <li class="list-group-item bg-transparent text-white">{{ ingredient_item.ingredient.name }}: {{ ingredient_item.quantity }} {{ ingredient_item.ingredient.unit }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endwith %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <div class="lead alert alert-warning" role="alert">
+                <b>Bugün yemek servisi yapılmayacaktır.</b>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

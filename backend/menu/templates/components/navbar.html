@@ -10,7 +10,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'menu:dashboard' %}">Günlük Menü</a>
+                <a class="nav-link" href="{% url 'menu:daily_menu' %}">Günlük Menü</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'menu:monthly_menu' %}">Aylık Menü</a>
@@ -23,8 +23,8 @@
                     Panel
                   </a>
                   <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="{% url 'menu:dashboard' %}">Action</a></li>
-                    <li><a class="dropdown-item" href="{% url 'menu:dashboard' %}">Another action</a></li>
+                    <li><a class="dropdown-item" href="{% url 'menu:ingredients' %}">Malzemeler</a></li>
+                    <li><a class="dropdown-item" href="{% url 'menu:ingredient-requirements' %}">Malzeme İhtiyaçları</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="{% url 'menu:dashboard' %}">Something else here</a></li>
                   </ul>

@@ -1,0 +1,90 @@
+.past-card-header {
+    background-color: #6c757d!important; /* Example: gray for past dates */
+}
+
+.today-card-header {
+    background-color: #186029!important; /* Example: green for today */
+}
+
+.tomorrow-card-header {
+    background-color: #775a01!important; /* Example: yellow for tomorrow */
+}
+
+.future-card-header {
+    background-color: #034081!important; /* Example: blue for future dates */
+}
+
+.table-responsive:hover {
+    overflow: visible;
+}
+
+.table td {
+    padding: 0;
+    vertical-align: top;
+    overflow: hidden;
+}
+
+.table td:hover {
+    overflow:visible;
+}
+
+
+.calendar-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.minimal-info {
+    display: block;
+}
+
+.detailed-info {
+    display: none;
+}
+
+.hoverable-card:hover {
+    position: relative;
+    right: 25%;
+    width: 150%;
+    z-index: 10;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    overflow: visible;
+}
+
+.hoverable-card:hover .minimal-info {
+    display: none;
+}
+
+.hoverable-card:hover .detailed-info {
+    display: block;
+}
+
+.short-card {
+    min-height: 50px;
+}
+
+
+.weekend-col {
+    width: 10%;
+}
+
+@media (max-width: 768px) {
+    .table-responsive .calendar-table th,
+    .table-responsive .calendar-table td {
+        font-size: 0.8rem;
+    }
+
+    .short-card {
+        min-height: 30px;
+    }
+
+    .card {
+        min-height: 80px;
+    }
+
+    .hoverable-card:hover {
+        transform: scale(1.2);
+    }
+}

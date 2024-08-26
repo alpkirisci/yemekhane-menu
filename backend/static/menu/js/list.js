@@ -17,3 +17,5 @@ function triggerRecordUpdate(elementId, action) {
         htmx.trigger(element, action);
     }
 }
+
+

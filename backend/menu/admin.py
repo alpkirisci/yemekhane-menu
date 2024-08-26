@@ -4,7 +4,7 @@ from .models import Category, IngredientItem, Ingredient, MenuItem, DailyMenu
 
 class IngredientItemInline(admin.TabularInline):
     model = MenuItem.ingredients.through
-    extra = 1  # Number of extra forms to display
+    extra = 1
 
 
 class MenuItemInline(admin.TabularInline):
@@ -42,9 +42,10 @@ class MenuItemAdmin(admin.ModelAdmin):
 
 @admin.register(DailyMenu)
 class DailyMenuAdmin(admin.ModelAdmin):
-    list_display = ('served_at', 'created_by', 'servings', 'created_at')
-    search_fields = ('served_at',)
-    list_filter = ('served_at', 'created_at')
-
-    inlines = [MenuItemInline]
-    exclude = ["menu_items"]
+    pass
+    # list_display = ('served_at', 'created_by', 'servings', 'created_at')
+    # search_fields = ('served_at',)
+    # list_filter = ('served_at', 'created_at')
+    #
+    # inlines = [MenuItemInline]
+    # exclude = ["menu_items"]

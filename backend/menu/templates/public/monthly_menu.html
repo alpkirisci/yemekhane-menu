@@ -1,19 +1,114 @@
 {% extends "base.html" %}
 {% load static %}
+{% load custom_filters %}
 
 {% block title %}Aylık Menü{% endblock %}
 {% block extra_css %}
     <link href="{% static 'menu/css/monthly_menu.css' %}" rel="stylesheet">
-
 {% endblock %}
 
 {% block content %}
-    {% for day in current_month_days %}
-        <h6>{{ day.date }}</h6>
-        <p>{{ day.menu }}</p>
-    {% endfor %}
-{% endblock %}
+<div class="container my-5">
+    <h2 class="mb-4 text-light">Aylık Menü: {{ month|date:"F Y" }}</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-dark calendar-table">
+            <thead>
+                <tr>
+                    <th scope="col">Pazartesi</th>
+                    <th scope="col">Salı</th>
+                    <th scope="col">Çarşamba</th>
+                    <th scope="col">Perşembe</th>
+                    <th scope="col">Cuma</th>
+                    <th scope="col" class="weekend-col">Cumartesi</th>
+                    <th scope="col" class="weekend-col">Pazar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for week in calendar %}
+                <tr>
+                    {% for day in week %}
+                    <td class="align-top p-1 position-relative">
+                        {% if day %}
+                        {% with menu=day|get_menu_for_day:daily_menus %}
+                        <div class="card bg-dark text-white h-100 calendar-card
+                                    {% if not menu and day|is_weekend %}short-card{% endif %}
+                                    {% if menu %}hoverable-card{% endif %}"
+                        >
+                            <div class="card-header bg-primary text-white p-1 text-center {{ day|get_card_class }}">
+                                {{ day|date:"j" }}
+                            </div>
+                            {% if menu %}
+                                <div class="card-body p-2 minimal-info">
+                                    <h5 class="card-title p-1 m-0">Yemekler</h5>
+                                    {% for category in categories %}
+                                        {% if menu|category_in_menu_items:category %}
+                                            <h6 class="card-title p-1 m-0 border-bottom border-light">{{ category }}</h6>
+                                            {% with menu_items=menu.menu_items|get_menu_item_with_category:category %}
+                                                <ul class="list-group list-group-flush">
+                                                {% for menu_item in menu_items %}
+                                                    <li class="list-group-item bg-dark text-white p-1">
+                                                        <p class="card-text text-white p-0 m-0 d-flex justify-content-between">
+                                                            {{ menu_item.name }}
+                                                        </p>
+                                                    </li>
+                                                {% endfor %}
+                                                </ul>
+                                            {% endwith %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="card-body p-2 detailed-info">
+                                    <h5 class="card-title p-1 m-0">Yemekler</h5>
+                                    {% for category in categories %}
+                                        {% if menu|category_in_menu_items:category %}
+                                            <h6 class="card-title p-1 m-0 border-bottom border-light">{{ category }}</h6>
+                                            {% with menu_items=menu.menu_items|get_menu_item_with_category:category %}
+                                                <ul class="list-group list-group-flush">
+                                                {% for menu_item in menu_items %}
+                                                    <li class="list-group-item bg-dark text-white p-1">
+                                                        <p class="card-text text-white p-0 m-0 d-flex justify-content-between">
+                                                            {{ menu_item.name }}
+                                                            <span class="text-white-50 text-end"><b>{{ menu_item.calories }}</b> kcal</span>
+                                                        </p>
+                                                        <p class="card-text text-white-50 p-0 m-0 d-flex justify-content-between">
+                                                            {{ menu_item.description }}
+                                                        </p>
+                                                    </li>
+                                                {% endfor %}
+                                                </ul>
+                                            {% endwith %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% else %}
 
-{% block extra_js %}
+                            {% endif %}
 
+                        </div>
+                        {% endwith %}
+                        {% endif %}
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination for months -->
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if previous_month %}
+                <li class="page-item">
+                    <a class="page-link bg-dark text-white" href="{% url "menu:monthly_menu" previous_month.year previous_month.month %}">&laquo; Önceki Ay</a>
+                </li>
+            {% endif %}
+            {% if next_month %}
+                <li class="page-item">
+                    <a class="page-link bg-dark text-white" href="{% url "menu:monthly_menu" next_month.year next_month.month %}">Sonraki Ay &raquo;</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
 {% endblock %}

@@ -10,6 +10,8 @@
 {#    Libraries#}
     <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'fontawesome-free-6.6.0-web/css/all.css' %}" rel="stylesheet">
+    <link href="{% static 'DataTables/datatables.min.css' %}" rel="stylesheet">
+
 
     {# Generic&Component CSS #}
     <link href="{% static 'menu/css/navbar.css' %}" rel="stylesheet">
@@ -30,7 +32,6 @@
         {% include 'components/navbar.html' %}
 
         {% block content %}
-        <!-- Main content will go here -->
         {% endblock %}
 
         {% include 'components/footer.html' %}
@@ -50,6 +51,9 @@
 
     <!-- HTMX Extension Script -->
     {% django_htmx_script %}
+
+    {#    DataTables#}
+    <script src="{% static 'DataTables/datatables.min.js' %}"></script>
 
     {# Generic&Component JS #}
     <script src="{% static 'menu/js/list.js' %}"></script>

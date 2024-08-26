@@ -1,0 +1,28 @@
+{% load custom_filters %}
+
+<div class="table-container">
+    <div class="table-responsive">
+        <table id="requirements-datatable"  class="table table-dark table-hover table-striped table-borderless align-middle shadow rounded">
+            <thead class="thead-dark">
+                <tr class="border-bottom">
+                    <th scope="col" class="id-column">ID</th>
+                    {% for field_title in field_titles %}
+                        <th scope="col">{{ field_title }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in page_obj %}
+                    <tr>
+                        <th scope="row" class="id-column">{{ item.id }}</th>
+                        {% for field in fields %}
+                            <td class="align-middle">{{ item|get_attr:field }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+

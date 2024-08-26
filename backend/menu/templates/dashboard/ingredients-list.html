@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Malzemeler{% endblock %}
+{% block extra_css %}
+{#    <link href="{% static 'menu/css/dashboard.css' %}" rel="stylesheet">#}
+
+
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <div class="row">
+            <div class="mb-4">
+                <div id="ingredient-list" hx-get="{% url 'menu:ingredient-list' %}" hx-trigger="load" hx-target="#ingredient-list">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+
+{% endblock %}

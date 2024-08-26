@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "django_htmx",
     'authentication.apps.AuthenticationConfig',
+    'django.contrib.postgres',
 ]
 
 AUTHENTICATION_BACKENDS = [
