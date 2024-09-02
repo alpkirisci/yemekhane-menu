@@ -1,0 +1,30 @@
+<div class="modal" tabindex="-1" id="menu_items-{{ object.id }}-modal">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark border-light">
+            <form hx-post="{% url 'menu:menu_items_update' pk=object.id %}"
+                  hx-target="#menu_items-{{ object.id }}-modal"
+                  hx-swap="outerHTML"
+            >
+                {% csrf_token %}
+
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Yemeği Düzenle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body bg-dark text-light">
+                    {{ form.as_div }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>
+                    <input type="submit" class="btn btn-primary" value="Onay">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+$(document).ready(function(){
+    $("#menu_items-{{ object.id }}-modal").modal('show');
+});
+</script>

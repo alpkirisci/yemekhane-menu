@@ -1,11 +1,40 @@
 from django import forms
+from django.forms import inlineformset_factory, modelformset_factory
+
+from menu.models import Ingredient, Category, MenuItem, IngredientItem
 
 
-def create_custom_model_form(model=None, fields=None, *args, **kwargs):
-    pass_model = model
-    pass_fields = fields
-    class CustomModelForm(forms.ModelForm):
-        class Meta:
-            model = pass_model
-            fields = '__all__'
-    return CustomModelForm(*args, **kwargs)
+class IngredientForm(forms.ModelForm):
+    class Meta:
+        model = Ingredient
+        fields = ['name', 'unit']
+
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['name', 'order']
+
+
+class IngredientItemForm(forms.ModelForm):
+    class Meta:
+        model = IngredientItem
+        fields = ['ingredient', 'quantity']
+
+    # Add bootstrap5 classes
+    def __init__(self, *args, **kwargs):
+        super(IngredientItemForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control bg-dark text-light mb-2'
+
+
+class MenuItemForm(forms.ModelForm):
+    class Meta:
+        model = MenuItem
+        fields = ['name', 'category', 'calories', 'description']
+
+    # Add bootstrap5 classes
+    def __init__(self, *args, **kwargs):
+        super(MenuItemForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control bg-dark text-light mb-2'

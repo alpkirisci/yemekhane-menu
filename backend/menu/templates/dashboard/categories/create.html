@@ -1,0 +1,43 @@
+<tr id="create-row-categories">
+    <form id="form-create-categories"
+          hx-post="{% url 'menu:categories_create' %}"
+          hx-target="#create-row-categories"
+          hx-swap="outerHTML"
+          hx-include="#create-row-categories input, #create-row-categories select"
+          novalidate
+          >
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"
+               form="form-create-categories">
+
+        <td class="id-column">#</td>
+
+        {% for field in form %}
+            <td class="align-middle">
+                <fieldset form="form-create-categories">
+
+                {{ field }}<br>
+                {% for error in field.errors %}
+                    <p class="text-danger p-0 m-0 mt-1">{{ error }}</p>
+                {% endfor %}
+                </fieldset>
+
+            </td>
+        {% endfor %}
+        <td class="actions-column">
+            <input type="submit" class="btn btn-sm btn-success rounded-pill me-1"
+                    value="&#10003;"
+                    form="form-create-categories"
+            >
+
+            <button type="button" class="btn btn-sm btn-danger rounded-pill"
+                    hx-get=""
+                    hx-target="#create-row-categories"
+                    hx-swap="delete"
+                    hx-trigger="click"
+            >
+                <i class="fas fa-times"></i>
+            </button>
+        </td>
+
+    </form>
+</tr>

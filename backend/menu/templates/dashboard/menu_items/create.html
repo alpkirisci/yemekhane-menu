@@ -1,0 +1,61 @@
+<div class="modal" tabindex="-1" id="menu_items-create-modal">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark border-light">
+            <form hx-post="{% url 'menu:menu_items_create' %}"
+                  hx-target="#menu_items-create-modal"
+                  hx-swap="outerHTML"
+            >
+                {% csrf_token %}
+
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Yemek Oluştur</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{ form.as_div }}
+                    <hr>
+                    {{ formset.management_form }}
+                    {% for form in formset %}
+                        <div class="row">
+                            <div class="col-md-5">
+                                {{ form.ingredient.label_tag }} {{ form.ingredient }}
+                            </div>
+                            <div class="col-md-5">
+                                {{ form.quantity.label_tag }} {{ form.quantity }}
+                            </div>
+                            <div class="col-md-2 d-flex justify-content-center align-items-center">
+                                <button class="btn btn-sm btn-outline-danger rounded-pill"
+{#                                        #}
+                                >
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+
+
+                        </div>
+                    {% endfor %}
+                    <hr>
+                    <div class="col-md-12 d-flex justify-content-center align-items-center">
+                        <a class="btn btn-sm btn-success rounded-pill"
+{#                               hx-get="{% url 'menu:menu_items_create' %}"#}
+{#                               hx-target="body"#}
+{#                               hx-swap="afterbegin"#}
+                        >
+                            <i class="fa fa-add"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>
+                    <input type="submit" class="btn btn-primary" value="Onay">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+$(document).ready(function(){
+    $("#menu_items-create-modal").modal('show');
+});
+</script>

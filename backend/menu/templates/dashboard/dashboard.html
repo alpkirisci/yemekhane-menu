@@ -3,28 +3,16 @@
 
 {% block title %}Yemekhane{% endblock %}
 {% block extra_css %}
-    <link href="{% static 'menu/css/dashboard.css' %}" rel="stylesheet">
+    <link href="{% static 'css/dashboard/dashboard.css' %}" rel="stylesheet">
 
 
+    <link href="{% static 'css/dashboard/ingredients.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-    <div class="container mt-4">
-        <div class="row">
-            <div class="col-md-6 mb-4">
-                <div id="ingredient-list" hx-get="{% url 'menu:ingredient-list' %}" hx-trigger="load" hx-target="#ingredient-list">
-                </div>
-            </div>
 
-{#            <!-- Category List Display -->#}
-{#            <div class="col-md-6 mb-4">#}
-{#                <div id="category-list" hx-get="{% url 'menu:category_list' %}" hx-trigger="load" hx-target="#category-list">#}
-{#                </div>#}
-{#            </div>#}
-        </div>
-    </div>
 {% endblock %}
 
 {% block extra_js %}
-
+    <script src="{% static 'js/dashboard.js' %}"></script>
 {% endblock %}

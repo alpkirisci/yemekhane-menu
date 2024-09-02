@@ -3,20 +3,18 @@
         {% if page_obj.has_previous %}
             <li class="page-item">
                 <a class="page-link text-light bg-dark"
-                   {% if search_name %}
-                       hx-get="{% url 'menu:ingredient-list' page=page_obj.previous_page_number|default:1  search_name=search_name %}"
-                   {% else %}
-                       hx-get="{% url 'menu:ingredient-list' page=page_obj.previous_page_number|default:1 %}"
-                   {% endif %}
-                   hx-target="#table-{{ model_name }}"
+                   hx-get="{% url 'menu:ingredients_list' %}?page={{ page_obj.previous_page_number }}"
+                   hx-target="#list-ingredients"
                    hx-swap="outerHTML"
-                   hx-trigger="click">
+                   hx-trigger="click"
+                   hx-include="[name='search_name']"
+                >
                     <span>&laquo;</span>
                 </a>
             </li>
         {% else %}
             <li class="page-item disabled">
-                <a class="page-link text-secondary bg-dark" aria-label="Previous">
+                <a class="page-link text-secondary bg-dark">
                     <span>&laquo;</span>
                 </a>
             </li>
@@ -30,14 +28,12 @@
             {% else %}
                 <li class="page-item">
                 <a class="page-link text-light bg-dark"
-                   {% if search_name %}
-                       hx-get="{% url 'menu:ingredient-list' page=num|default:1  search_name=search_name %}"
-                   {% else %}
-                       hx-get="{% url 'menu:ingredient-list' page=num|default:1 %}"
-                   {% endif %}
-                   hx-target="#table-{{ model_name }}"
+                   hx-get="{% url 'menu:ingredients_list' %}?page={{ num }}"
+                   hx-target="#list-ingredients"
                    hx-swap="outerHTML"
-                   hx-trigger="click">
+                   hx-trigger="click"
+                   hx-include="[name='search_name']"
+                >
                     {{ num }}
                 </a>
                 </li>
@@ -47,14 +43,12 @@
         {% if page_obj.has_next %}
             <li class="page-item">
                 <a class="page-link text-light bg-dark"
-                   {% if search_name %}
-                       hx-get="{% url 'menu:ingredient-list' page=page_obj.next_page_number|default:1  search_name=search_name %}"
-                   {% else %}
-                       hx-get="{% url 'menu:ingredient-list' page=page_obj.next_page_number|default:1 %}"
-                   {% endif %}
-                   hx-target="#table-{{ model_name }}"
+                   hx-get="{% url 'menu:ingredients_list' %}?page={{ page_obj.next_page_number }}"
+                   hx-target="#list-ingredients"
                    hx-swap="outerHTML"
-                   hx-trigger="click">
+                   hx-trigger="click"
+                   hx-include="[name='search_name']"
+                >
                     <span>&raquo;</span>
                 </a>
             </li>
@@ -67,4 +61,3 @@
         {% endif %}
     </ul>
 </nav>
-
