@@ -1,0 +1,43 @@
+<tr id="update-{{ object.id }}-categories">
+    <form id="form-{{ object.id }}-categories"
+          hx-post="{% url 'menu:categories_update' pk=object.id %}"
+          hx-target="#update-{{ object.id }}-categories"
+          hx-swap="outerHTML"
+          hx-include="#update-{{ object.id }}-categories input, #update-{{ object.id }}-categories select"
+          novalidate
+          >
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"
+               form="form-{{ object.id }}-categories">
+
+        <td class="id-column">{{ object.id }}</td>
+
+        {% for field in form %}
+            <td class="align-middle">
+                <fieldset form="form-{{ object.id }}-categories">
+
+                {{ field }}<br>
+                {% for error in field.errors %}
+                    <p class="text-danger p-0 m-0 mt-1">{{ error }}</p>
+                {% endfor %}
+                </fieldset>
+
+            </td>
+        {% endfor %}
+        <td class="actions-column">
+            <input type="submit" class="btn btn-sm btn-success rounded-pill me-1"
+                    value="&#10003;"
+                    form="form-{{ object.id }}-categories"
+            >
+
+            <button type="button" class="btn btn-sm btn-danger rounded-pill"
+                    hx-get="{% url 'menu:categories_detail' pk=object.id %}"
+                    hx-target="#update-{{ object.id }}-categories"
+                    hx-swap="outerHTML"
+                    hx-trigger="click"
+            >
+                <i class="fas fa-times"></i>
+            </button>
+        </td>
+
+    </form>
+</tr>

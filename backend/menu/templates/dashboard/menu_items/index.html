@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Yemekler{% endblock %}
+{% block extra_css %}
+    <link href="{% static 'css/dashboard/menu_items.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+    <div class="col-md-12 mb-4">
+        <div hx-get="{% url 'menu:menu_items_container' %}"
+                 hx-trigger="load" hx-target="this">
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/dashboard/menu_items.js' %}"></script>
+{% endblock %}

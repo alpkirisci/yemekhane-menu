@@ -1,0 +1,32 @@
+<div class="modal" tabindex="-1" id="menu_items-delete-modal">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark border-light">
+            <form hx-post="{% url 'menu:menu_items_delete' pk=object.id %}"
+                  hx-target="#list-menu_items"
+                  hx-swap="outerHTML"
+            >
+                {% csrf_token %}
+
+                {{ form }}
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Onay</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="p-0 m-0">"{{ object.name }}" yemeğini silmek istediğinize emin misiniz?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>
+                    <input type="submit" class="btn btn-primary" data-bs-dismiss="modal" value="Onay">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $("#menu_items-delete-modal").modal('show');
+    });
+</script>
