@@ -14,10 +14,9 @@
 
 
     {# Generic&Component CSS #}
-    <link href="{% static 'menu/css/navbar.css' %}" rel="stylesheet">
-    <link href="{% static 'menu/css/footer.css' %}" rel="stylesheet">
-    <link href="{% static 'menu/css/base.css' %}" rel="stylesheet">
-    <link href="{% static 'menu/css/list.css' %}" rel="stylesheet">
+    <link href="{% static 'css/components/navbar.css' %}" rel="stylesheet">
+    <link href="{% static 'css/components/footer.css' %}" rel="stylesheet">
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
 
     <!-- Custom CSS -->
     {% block extra_css %}
@@ -25,7 +24,7 @@
     {% endblock %}
 
     <!-- HTMX JS -->
-    <script src="{% static 'htmx/htmx.min.js' %}" defer></script>
+    <script src="{% static 'htmx/htmx.min.js' %}"></script>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper d-flex flex-column min-vh-100">
@@ -55,8 +54,6 @@
     {#    DataTables#}
     <script src="{% static 'DataTables/datatables.min.js' %}"></script>
 
-    {# Generic&Component JS #}
-    <script src="{% static 'menu/js/list.js' %}"></script>
 
     <!-- Custom JS -->
     {% block extra_js %}

@@ -4,7 +4,7 @@
 
 {% block title %}Aylık Menü{% endblock %}
 {% block extra_css %}
-    <link href="{% static 'menu/css/monthly_menu.css' %}" rel="stylesheet">
+    <link href="{% static 'css/public/monthly_menu.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -96,7 +96,7 @@
     </div>
 
     <!-- Pagination for months -->
-    <nav class="mt-4">
+    <nav>
         <ul class="pagination justify-content-center">
             {% if previous_month %}
                 <li class="page-item">

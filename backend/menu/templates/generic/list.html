@@ -1,9 +1,0 @@
-{% load static %}
-{% load custom_filters %}
-
-<div class="container my-4">
-    {% include 'generic/list-header.html' with page_obj=page_obj fields=fields model_name=model_name search_name=search_name%}
-
-    {% include 'generic/list-table.html' with page_obj=page_obj fields=fields model_name=model_name search_name=search_name %}
-
-</div>

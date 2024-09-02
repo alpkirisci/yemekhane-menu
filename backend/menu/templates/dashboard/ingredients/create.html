@@ -1,0 +1,43 @@
+<tr id="create-row-ingredients">
+    <form id="form-create-ingredients"
+          hx-post="{% url 'menu:ingredients_create' %}"
+          hx-target="#create-row-ingredients"
+          hx-swap="outerHTML"
+          hx-include="#create-row-ingredients input, #create-row-ingredients select"
+          novalidate
+          >
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"
+               form="form-create-ingredients">
+
+        <td class="id-column">#</td>
+
+        {% for field in form %}
+            <td class="align-middle">
+                <fieldset form="form-create-ingredients">
+
+                {{ field }}<br>
+                {% for error in field.errors %}
+                    <p class="text-danger p-0 m-0 mt-1">{{ error }}</p>
+                {% endfor %}
+                </fieldset>
+
+            </td>
+        {% endfor %}
+        <td class="actions-column">
+            <input type="submit" class="btn btn-sm btn-success rounded-pill me-1"
+                    value="&#10003;"
+                    form="form-create-ingredients"
+            >
+
+            <button type="button" class="btn btn-sm btn-danger rounded-pill"
+                    hx-get=""
+                    hx-target="#create-row-ingredients"
+                    hx-swap="delete"
+                    hx-trigger="click"
+            >
+                <i class="fas fa-times"></i>
+            </button>
+        </td>
+
+    </form>
+</tr>

@@ -1,0 +1,27 @@
+    <!-- Table Search and Add Button -->
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h3 class="text-light mb-0">Malzemeler</h3>
+        <div class="d-flex">
+            <div class="input-group input-group-sm me-3">
+                <input type="text" class="form-control form-control-sm bg-dark text-white border-secondary"
+                       placeholder="İsim..."
+                       id="search-ingredients"
+                       name="search_name"
+                       hx-get="{% url 'menu:ingredients_list' %}"
+                       hx-include="this"
+                       hx-target="#list-ingredients"
+                       hx-swap="outerHTML"
+                       hx-trigger="input from:#search-ingredients"
+                >
+            </div>
+            <a         class="btn btn-sm btn-success rounded-pill"
+                       hx-get="{% url 'menu:ingredients_create' %}"
+                       hx-target="#tbody-ingredients"
+                       hx-swap="afterbegin"
+                       hx-trigger="create_event_ingredients"
+                       onclick="createIngredientsForm()"
+            >
+                <i class="fa fa-add"></i>
+            </a>
+        </div>
+    </div>
