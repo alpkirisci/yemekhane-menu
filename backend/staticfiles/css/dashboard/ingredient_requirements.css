@@ -1,0 +1,11 @@
+.pagination > .dt-paging-button.page-item > button{
+    background-color:#212529;
+}
+
+.pagination > .dt-paging-button.page-item > button{
+    border-color: #6f7981;
+}
+
+.bright-placeholder::placeholder{
+    color:lightgray;
+}

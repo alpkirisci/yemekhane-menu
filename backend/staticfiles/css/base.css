@@ -1,0 +1,50 @@
+        body {
+            background-color: #121212; /* Dark background for the entire page */
+            color: #ffffff; /* White text for readability */
+        }
+
+        .wrapper {
+            background-color: #1e1e1e; /* Slightly lighter dark background for the wrapper */
+            color: #cfcfcf; /* Light grey text for softer contrast */
+        }
+
+        .navbar, .footer {
+            background-color: #2c2f33; /* Darker background for navbar and footer */
+        }
+
+        .navbar-brand, .navbar-nav .nav-link, .footer-text {
+            color: #ffffff; /* White text for navbar and footer links */
+        }
+
+        .navbar-nav .nav-link:hover, .footer-text:hover {
+            color: #adb5bd; /* Slightly lighter hover effect */
+        }
+
+        .table-dark {
+            background-color: #2c2f33; /* Darker table background */
+            color: #ffffff; /* White text for table content */
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #3b3e42; /* Hover effect for table rows */
+        }
+
+        .btn-outline-light {
+            border-color: #ffffff;
+            color: #ffffff;
+        }
+
+        .btn-outline-light:hover {
+            background-color: #ffffff;
+            color: #2c2f33;
+        }
+
+        .btn-outline-danger {
+            border-color: #ff6b6b;
+            color: #ff6b6b;
+        }
+
+        .btn-outline-danger:hover {
+            background-color: #ff6b6b;
+            color: #2c2f33;
+        }
