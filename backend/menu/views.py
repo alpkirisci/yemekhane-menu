@@ -5,15 +5,15 @@ from datetime import date
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.forms import formset_factory, inlineformset_factory, modelformset_factory
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect
 from django.template.response import TemplateResponse
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.datetime_safe import datetime
 from django.views.generic import ListView, MonthArchiveView, CreateView, DeleteView, \
     DetailView, UpdateView
 
-from menu.forms import IngredientForm, CategoryForm, MenuItemForm, IngredientItemForm
+from menu.forms import IngredientForm, CategoryForm, MenuItemForm, IngredientItemForm, IngredientItemFormSet
 from menu.models import Ingredient, Category, DailyMenu, MenuItem, IngredientItem
 
 
@@ -272,54 +272,56 @@ class MenuItemsDetailView(DetailView):
     template_name = 'dashboard/menu_items/detail.html'
 
 
-def get_ingredient_items_formset(request):
-    """ To manage GET for ingredient items in MenuItemsCreate/Update """
-    IngredientItemFormSet = modelformset_factory(
-        IngredientItem,
-        form=IngredientItemForm,
-        extra=1,
-        can_delete=True,
-    )
+def manage_ingredient_items_formset(request):
+    """To handle ingredients field in MenuItemForms"""
     if request.method == "GET":
         pk = request.GET.get('pk')
         if pk is not None:
         # Then this is an update view GET
+            # Render with its selected IngredientItem(s) if any
             formset = IngredientItemFormSet(queryset=MenuItem.objects.get(pk=pk).ingredients.all())
         else:
         # Then this is a create view GET
             formset = IngredientItemFormSet(queryset=IngredientItem.objects.none())
         return formset
+    if request.method == "POST":
+        # Build the formset
+        formset = IngredientItemFormSet(request.POST)
+        return formset
     raise Http404('Method not allowed')
 
 
-# def post_ingredient_items_formset(request, kwargs):
-#     """ To manage POST for ingredient items in MenuItemsCreate/Update """
-#     IngredientItemFormSet = modelformset_factory(
-#         IngredientItem,
-#         form=IngredientItemForm,
-#         extra=1,
-#         can_delete=True,
-#     )
-#     # Save IngredientItem
-#     # TODO: Save IngredientItem to MenuItem
-#     if request.method == "POST":
-#         formset = IngredientItemFormSet(request.POST)
-#         if formset.is_valid():
-#             formset.save()
-#             main_form = kwargs.get('form')
-#         return formset
-#     raise Http404('Method not allowed')
-
-
 class MenuItemsCreateView(CreateView):
+    """CreateView that uses FormSet"""
     model = MenuItem
     template_name = 'dashboard/menu_items/create.html'
     form_class = MenuItemForm
+    success_url = reverse_lazy('menu:menu_items_index')
 
     def get_context_data(self, **kwargs):
+        """Add formset to context"""
         context = super().get_context_data(**kwargs)
-        context['formset'] = get_ingredient_items_formset(self.request)
+        context['formset'] = manage_ingredient_items_formset(self.request)
         return context
+
+    def form_valid(self, form):
+        """Handle ingredients field with formset."""
+        # Get formset
+        formset = manage_ingredient_items_formset(self.request)
+        if formset.is_valid():
+            # Form is saved without ingredients.
+            response = super().form_valid(form)
+
+            # Save the IngredientItem instances.
+            ingredient_items = formset.save()
+            # Add ingredient_items to MenuItem.
+            form.instance.ingredients.add(*ingredient_items)
+            form.save()
+            return response
+        else:
+            # Form_invalid returns get_context_data.
+            # get_context_data is overridden to include formset.
+            return self.form_invalid(form)
 
 
 class MenuItemsUpdateView(UpdateView):

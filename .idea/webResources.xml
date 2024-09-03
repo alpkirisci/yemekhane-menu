@@ -5,7 +5,6 @@
       <entry url="file://$PROJECT_DIR$">
         <entryData>
           <resourceRoots>
-            <path value="file://$PROJECT_DIR$/backend/static" />
             <path value="file://$PROJECT_DIR$/backend/static/htmx" />
             <path value="file://$PROJECT_DIR$/backend/static/adminlte/dist/js" />
           </resourceRoots>
