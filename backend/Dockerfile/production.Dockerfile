@@ -52,6 +52,6 @@ EXPOSE 8000
 
 
 # Run the application via gunicorn.
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "wsgi:application"]
+#CMD ["gunicorn", "--bind", "0.0.0.0:8000", "wsgi:application"]
 
 # https://github.com/docker/awesome-compose/blob/master/django/app/Dockerfile
