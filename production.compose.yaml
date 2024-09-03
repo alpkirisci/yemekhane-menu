@@ -18,7 +18,9 @@ services:
 
     # mkdir -p /app/static /app/media && chmod -R 755 /app/static /app/media &&
     command: >
-      sh -c "python manage.py collectstatic --noinput &&
+      sh -c "mkdir -p /app/staticfiles && 
+             chmod -R 755 /app/staticfiles && 
+             python manage.py collectstatic --noinput &&
              gunicorn --bind 0.0.0.0:8000 backend.wsgi:application"
 
 
