@@ -40,9 +40,9 @@ def menu_items(request):
 def ingredient_requirements(request):
     return render(request, 'dashboard/ingredient-requirements/base.html')
 
-
 def ingredient_requirements_table(request):
-    """ Calculate needed ingredients within given date range and display. """
+    """Calculate needed ingredients within given date range and display."""
+    # TODO: Review ingredient_requirements_table
     template_name = 'dashboard/ingredient-requirements/table.html'
     paginate_by = 1000000  # Pagination currently on client-side.
 
@@ -86,6 +86,8 @@ def ingredient_requirements_table(request):
 
 
 class MenuMonthArchiveView(MonthArchiveView):
+    """"""
+    # TODO: Review MonthArchiveView
     queryset = DailyMenu.objects.all()
     date_field = "served_at"
     allow_future = True
@@ -128,6 +130,7 @@ def daily_menu(request):
 
 
 class IngredientsListView(ListView):
+    """Construct ingredients list."""
     model = Ingredient
     template_name = 'dashboard/ingredients/container.html'
     paginate_by = 5
@@ -138,6 +141,7 @@ class IngredientsListView(ListView):
 
 
 class IngredientsListSearchView(IngredientsListView):
+    """Construct ingredients list with search."""
     template_name = 'dashboard/ingredients/list.html'
 
     def get_queryset(self):
@@ -149,6 +153,7 @@ class IngredientsListSearchView(IngredientsListView):
 
 
 class IngredientsDeleteView(DeleteView):
+    """Confirmation form and delete logic for ingredients record."""
     model = Ingredient
     template_name = 'dashboard/ingredients/confirm_delete.html'
 
@@ -159,11 +164,13 @@ class IngredientsDeleteView(DeleteView):
 
 
 class IngredientsDetailView(DetailView):
+    """Construct ingredients record for display."""
     model = Ingredient
     template_name = 'dashboard/ingredients/detail.html'
 
 
 class IngredientsCreateView(CreateView):
+    """Construct ingredients form for creation."""
     model = Ingredient
     template_name = 'dashboard/ingredients/create.html'
     form_class = IngredientForm
@@ -174,6 +181,7 @@ class IngredientsCreateView(CreateView):
 
 
 class IngredientsUpdateView(UpdateView):
+    """Construct ingredients form for updates."""
     model = Ingredient
     template_name = 'dashboard/ingredients/update.html'
     form_class = IngredientForm
@@ -184,6 +192,7 @@ class IngredientsUpdateView(UpdateView):
 
 
 class CategoriesListView(ListView):
+    """Construct categories list."""
     model = Category
     template_name = 'dashboard/categories/container.html'
     paginate_by = 5
@@ -194,6 +203,7 @@ class CategoriesListView(ListView):
 
 
 class CategoriesListSearchView(CategoriesListView):
+    """Construct categories list with search."""
     template_name = 'dashboard/categories/list.html'
 
     def get_queryset(self):
@@ -205,6 +215,7 @@ class CategoriesListSearchView(CategoriesListView):
 
 
 class CategoriesDeleteView(DeleteView):
+    """Confirmation form and delete logic for ingredients record."""
     model = Category
     template_name = 'dashboard/categories/confirm_delete.html'
 
@@ -215,11 +226,13 @@ class CategoriesDeleteView(DeleteView):
 
 
 class CategoriesDetailView(DetailView):
+    """Construct categories record for display."""
     model = Category
     template_name = 'dashboard/categories/detail.html'
 
 
 class CategoriesCreateView(CreateView):
+    """Construct ingredients form for creation."""
     model = Category
     template_name = 'dashboard/categories/create.html'
     form_class = CategoryForm
@@ -230,6 +243,7 @@ class CategoriesCreateView(CreateView):
 
 
 class CategoriesUpdateView(UpdateView):
+    """Construct ingredients form for updates."""
     model = Category
     template_name = 'dashboard/categories/update.html'
     form_class = CategoryForm
@@ -275,7 +289,7 @@ class MenuItemsDetailView(DetailView):
     template_name = 'dashboard/menu_items/detail.html'
 
 
-class MenuItemsUpdateViewTEST(FormSetUpdateView):
+class MenuItemsUpdateView(FormSetUpdateView):
     model = MenuItem
     template_name = 'dashboard/menu_items/update.html'
     form_class = MenuItemForm
@@ -283,8 +297,16 @@ class MenuItemsUpdateViewTEST(FormSetUpdateView):
     formset_class = IngredientItemFormSet
     formset_related_field = 'ingredients'
 
+    def form_valid(self, form):
+        """Assign the current user to the updated_by field."""
+        print(50 * "*")
+        print(self.request.user)
+        print(50 * "*")
+        form.instance.updated_by = self.request.user
+        return super().form_valid(form)
 
-class MenuItemsCreateViewTEST(FormSetCreateView):
+
+class MenuItemsCreateView(FormSetCreateView):
     model = MenuItem
     template_name = 'dashboard/menu_items/create.html'
     form_class = MenuItemForm
@@ -292,91 +314,12 @@ class MenuItemsCreateViewTEST(FormSetCreateView):
     formset_class = IngredientItemFormSet
     formset_related_field = 'ingredients'
 
-
-class MenuItemsUpdateView(UpdateView):
-    model = MenuItem
-    template_name = 'dashboard/menu_items/update.html'
-    form_class = MenuItemForm
-    success_url = reverse_lazy('menu:menu_items_index')
-    formset = None
-
-    def get_context_data(self, **kwargs):
-        """Add formset to context"""
-        self.extra_context = {'formset': self.formset}
-        return super().get_context_data(**kwargs)
-
-    def post(self, request, *args, **kwargs):
-        """Build formset with POST request"""
-        self.formset = IngredientItemFormSet(request.POST)
-        return super().post(request, *args, **kwargs)
-
-    def get(self, request, *args, **kwargs):
-        """Build formset with GET request"""
-        self.formset = IngredientItemFormSet(queryset=self.get_object().ingredients.all())
-        return super().get(request, *args, **kwargs)
-
     def form_valid(self, form):
-        """Handle formset validation and response with HX-Redirect."""
-        if self.formset.is_valid():
-            # Save form and get response.
-            response = super().form_valid(form)
-            # Dumb it down to modify.
-            response = HttpResponse(response)
-            # To bypass hx-target.
-            response['HX-Redirect'] = self.get_success_url()
+        """Assign the current user to the updated_by field."""
+        print(50 * "*")
+        print(self.request.user)
+        print(50 * "*")
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
 
-            # Save ingredient items and get instances
-            ingredient_items = self.formset.save()
-            # Add ingredient items to ManyToMany ingredients Field
-            form.instance.ingredients.add(*ingredient_items)
 
-            return response
-        else:
-            # No need to send formset.
-            # get_context_data adds it via self.formset.
-            return self.form_invalid(form)
-        pass
-
-class MenuItemsCreateView(CreateView):
-    model = MenuItem
-    template_name = 'dashboard/menu_items/create.html'
-    form_class = MenuItemForm
-    success_url = reverse_lazy('menu:menu_items_index')
-    formset = None
-
-    def get_context_data(self, **kwargs):
-        """Add formset to context"""
-        self.extra_context = {'formset': self.formset}
-        return super().get_context_data(**kwargs)
-
-    def post(self, request, *args, **kwargs):
-        """Build formset with POST request"""
-        self.formset = IngredientItemFormSet(request.POST)
-        return super().post(request, *args, **kwargs)
-
-    def get(self, request, *args, **kwargs):
-        """Build formset with GET request"""
-        self.formset = IngredientItemFormSet(queryset=IngredientItem.objects.none())
-        return super().get(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        """Handle formset validation and response with HX-Redirect."""
-        if self.formset.is_valid():
-            # Save form and get response.
-            response = super().form_valid(form)
-            # Dumb it down to modify.
-            response = HttpResponse(response)
-            # To bypass hx-target.
-            response['HX-Redirect'] = self.get_success_url()
-
-            # Save ingredient items and get instances
-            ingredient_items = self.formset.save()
-            # Add ingredient items to ManyToMany ingredients Field
-            form.instance.ingredients.add(*ingredient_items)
-
-            return response
-        else:
-            # No need to send formset.
-            # get_context_data adds it via self.formset.
-            return self.form_invalid(form)
-        pass
