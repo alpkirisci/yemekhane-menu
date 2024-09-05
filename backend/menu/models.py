@@ -1,5 +1,9 @@
+from decimal import Decimal
+
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.conf import settings
+from django.utils.translation import gettext_lazy as _
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
@@ -11,14 +15,13 @@ class Category(models.Model):
 
 
 class Ingredient(models.Model):
-    UNIT_CHOICES = [
-        ('g', 'Gram'),
-        ('ml', 'Milliliter'),
-        ('p', 'Piece(s)')
-    ]
+    class UnitNames(models.TextChoices):
+        GRAM = "g", _("Gram")
+        MILLILITER = "ml", _("Milliliter")
+        PIECES = "p", _("Piece(s)")
 
     name = models.CharField(max_length=50, unique=True, blank=False)
-    unit = models.CharField(max_length=50, choices=UNIT_CHOICES, blank=False)
+    unit = models.CharField(max_length=50, choices=UnitNames.choices, blank=False)
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
@@ -30,7 +33,7 @@ class IngredientItem(models.Model):
                                    on_delete=models.CASCADE,
                                    limit_choices_to={'is_active': True},)
 
-    quantity = models.IntegerField(default=0)
+    quantity = models.DecimalField(decimal_places=2, max_digits=10, validators=[MinValueValidator(0.1)])
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
@@ -38,7 +41,7 @@ class IngredientItem(models.Model):
 
 
 class MenuItem(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     category = models.ForeignKey(Category,
                                    on_delete=models.CASCADE,
                                    limit_choices_to={'is_active': True},)

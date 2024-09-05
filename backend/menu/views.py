@@ -4,7 +4,7 @@ from datetime import date
 
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.forms import formset_factory, inlineformset_factory, modelformset_factory
+from django.db.models import QuerySet
 from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect
 from django.template.response import TemplateResponse
@@ -12,8 +12,11 @@ from django.urls import reverse, reverse_lazy
 from django.utils.datetime_safe import datetime
 from django.views.generic import ListView, MonthArchiveView, CreateView, DeleteView, \
     DetailView, UpdateView
+from django.views.generic.detail import SingleObjectTemplateResponseMixin
+from django.views.generic.edit import ProcessFormView, ModelFormMixin
 
-from menu.forms import IngredientForm, CategoryForm, MenuItemForm, IngredientItemForm, IngredientItemFormSet
+from menu.forms import IngredientForm, CategoryForm, MenuItemForm, IngredientItemFormSet
+from menu.formset_views import FormSetUpdateView, FormSetCreateView
 from menu.models import Ingredient, Category, DailyMenu, MenuItem, IngredientItem
 
 
@@ -272,59 +275,108 @@ class MenuItemsDetailView(DetailView):
     template_name = 'dashboard/menu_items/detail.html'
 
 
-def manage_ingredient_items_formset(request):
-    """To handle ingredients field in MenuItemForms"""
-    if request.method == "GET":
-        pk = request.GET.get('pk')
-        if pk is not None:
-        # Then this is an update view GET
-            # Render with its selected IngredientItem(s) if any
-            formset = IngredientItemFormSet(queryset=MenuItem.objects.get(pk=pk).ingredients.all())
-        else:
-        # Then this is a create view GET
-            formset = IngredientItemFormSet(queryset=IngredientItem.objects.none())
-        return formset
-    if request.method == "POST":
-        # Build the formset
-        formset = IngredientItemFormSet(request.POST)
-        return formset
-    raise Http404('Method not allowed')
+class MenuItemsUpdateViewTEST(FormSetUpdateView):
+    model = MenuItem
+    template_name = 'dashboard/menu_items/update.html'
+    form_class = MenuItemForm
+    success_url = reverse_lazy('menu:menu_items_index')
+    formset_class = IngredientItemFormSet
+    formset_related_field = 'ingredients'
 
 
-class MenuItemsCreateView(CreateView):
-    """CreateView that uses FormSet"""
+class MenuItemsCreateViewTEST(FormSetCreateView):
     model = MenuItem
     template_name = 'dashboard/menu_items/create.html'
     form_class = MenuItemForm
     success_url = reverse_lazy('menu:menu_items_index')
-
-    def get_context_data(self, **kwargs):
-        """Add formset to context"""
-        context = super().get_context_data(**kwargs)
-        context['formset'] = manage_ingredient_items_formset(self.request)
-        return context
-
-    def form_valid(self, form):
-        """Handle ingredients field with formset."""
-        # Get formset
-        formset = manage_ingredient_items_formset(self.request)
-        if formset.is_valid():
-            # Form is saved without ingredients.
-            response = super().form_valid(form)
-
-            # Save the IngredientItem instances.
-            ingredient_items = formset.save()
-            # Add ingredient_items to MenuItem.
-            form.instance.ingredients.add(*ingredient_items)
-            form.save()
-            return response
-        else:
-            # Form_invalid returns get_context_data.
-            # get_context_data is overridden to include formset.
-            return self.form_invalid(form)
+    formset_class = IngredientItemFormSet
+    formset_related_field = 'ingredients'
 
 
 class MenuItemsUpdateView(UpdateView):
     model = MenuItem
     template_name = 'dashboard/menu_items/update.html'
     form_class = MenuItemForm
+    success_url = reverse_lazy('menu:menu_items_index')
+    formset = None
+
+    def get_context_data(self, **kwargs):
+        """Add formset to context"""
+        self.extra_context = {'formset': self.formset}
+        return super().get_context_data(**kwargs)
+
+    def post(self, request, *args, **kwargs):
+        """Build formset with POST request"""
+        self.formset = IngredientItemFormSet(request.POST)
+        return super().post(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        """Build formset with GET request"""
+        self.formset = IngredientItemFormSet(queryset=self.get_object().ingredients.all())
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        """Handle formset validation and response with HX-Redirect."""
+        if self.formset.is_valid():
+            # Save form and get response.
+            response = super().form_valid(form)
+            # Dumb it down to modify.
+            response = HttpResponse(response)
+            # To bypass hx-target.
+            response['HX-Redirect'] = self.get_success_url()
+
+            # Save ingredient items and get instances
+            ingredient_items = self.formset.save()
+            # Add ingredient items to ManyToMany ingredients Field
+            form.instance.ingredients.add(*ingredient_items)
+
+            return response
+        else:
+            # No need to send formset.
+            # get_context_data adds it via self.formset.
+            return self.form_invalid(form)
+        pass
+
+class MenuItemsCreateView(CreateView):
+    model = MenuItem
+    template_name = 'dashboard/menu_items/create.html'
+    form_class = MenuItemForm
+    success_url = reverse_lazy('menu:menu_items_index')
+    formset = None
+
+    def get_context_data(self, **kwargs):
+        """Add formset to context"""
+        self.extra_context = {'formset': self.formset}
+        return super().get_context_data(**kwargs)
+
+    def post(self, request, *args, **kwargs):
+        """Build formset with POST request"""
+        self.formset = IngredientItemFormSet(request.POST)
+        return super().post(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        """Build formset with GET request"""
+        self.formset = IngredientItemFormSet(queryset=IngredientItem.objects.none())
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        """Handle formset validation and response with HX-Redirect."""
+        if self.formset.is_valid():
+            # Save form and get response.
+            response = super().form_valid(form)
+            # Dumb it down to modify.
+            response = HttpResponse(response)
+            # To bypass hx-target.
+            response['HX-Redirect'] = self.get_success_url()
+
+            # Save ingredient items and get instances
+            ingredient_items = self.formset.save()
+            # Add ingredient items to ManyToMany ingredients Field
+            form.instance.ingredients.add(*ingredient_items)
+
+            return response
+        else:
+            # No need to send formset.
+            # get_context_data adds it via self.formset.
+            return self.form_invalid(form)
+        pass

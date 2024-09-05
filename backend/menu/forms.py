@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django import forms
 from django.forms import inlineformset_factory, modelformset_factory
 
@@ -35,37 +37,36 @@ class IngredientItemForm(forms.ModelForm):
         fields = ['ingredient', 'quantity']
         widgets = {"ingredient": IngredientSelect}
 
-
-    # Add bootstrap5 classes
     def __init__(self, *args, **kwargs):
         super(IngredientItemForm, self).__init__(*args, **kwargs)
+
+        # Add bootstrap5 classes
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control bg-dark text-light my-2'
 
-
-
+    def clean_quantity(self):
+        """Check if the quantity is in valid quarters"""
+        quantity = self.cleaned_data['quantity']
+        if quantity % Decimal('0.25') != 0:
+            raise forms.ValidationError('The quantity must be in quarters (e.g., .00, .25, .50, .75).')
+        return quantity
 
 
 IngredientItemFormSet = modelformset_factory(
     IngredientItem,
     form=IngredientItemForm,
-    extra=10,
+    extra=1,
     can_delete=True,
-    max_num=10,
 )
 
 
 class MenuItemForm(forms.ModelForm):
     class Meta:
         model = MenuItem
-        fields = ['name', 'category', 'calories', 'description', 'ingredients']
+        fields = ['name', 'category', 'calories', 'description']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        # Remove 'ingredients' field from being rendered in the form
-        # Will still be used in saving and validation
-        self.fields.pop('ingredients')
 
         # Add bootstrap5 classes
         for field_name, field in self.fields.items():

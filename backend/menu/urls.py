@@ -32,8 +32,8 @@ menu_items_patterns = [
     path("list/", views.MenuItemsListSearchView.as_view(), name="menu_items_list"),
     path("delete/<str:pk>/", views.MenuItemsDeleteView.as_view(), name="menu_items_delete"),
     path("detail/<str:pk>/", views.MenuItemsDetailView.as_view(), name="menu_items_detail"),
-    path("create/", views.MenuItemsCreateView.as_view(), name="menu_items_create"),
-    path("update/<str:pk>/", views.MenuItemsUpdateView.as_view(), name="menu_items_update"),
+    path("create/", views.MenuItemsCreateViewTEST.as_view(), name="menu_items_create"),
+    path("update/<str:pk>/", views.MenuItemsUpdateViewTEST.as_view(), name="menu_items_update"),
 ]
 
 
