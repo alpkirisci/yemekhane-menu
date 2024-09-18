@@ -1,0 +1,24 @@
+<div id="list-daily_menus">
+    <div class="table-container">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover table-striped table-borderless align-middle shadow rounded">
+                <thead class="thead-dark">
+                    <tr class="border-bottom">
+                        <th scope="col" class="id-column">ID</th>
+                        <th scope="col" class="small-column">Servis Tarihi</th>
+                        <th scope="col">Yemekler</th>
+                        <th scope="col" class="small-column">Servis Adedi</th>
+                        <th scope="col" class="actions-column">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-daily_menus">
+                    {% for object in page_obj %}
+                        {% include "dashboard/daily_menus/detail.html" %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    {% include 'dashboard/daily_menus/pagination.html' %}
+</div>

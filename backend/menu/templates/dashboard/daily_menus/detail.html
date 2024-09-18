@@ -1,0 +1,33 @@
+<tr id="daily_menus-{{ object.id }}">
+    <td class="id-column">{{ object.id }}</td>
+    <td class="align-middle">{{ object.served_at }}</td>
+    <td class="align-middle">
+        <ul class="list-unstyled m-0">
+        {% for item in object.menu_items.all %}
+            <li class="text-wrap">{{ item.name }}<span class="float-end text-info text-wrap">{{ item.quantity }} {{ item.ingredient.unit }}</span></li>
+        {% endfor %}
+        </ul>
+    </td>
+    <td class="align-middle">{{ object.servings }}</td>
+    <!-- Actions -->
+    <td class="actions-column">
+
+    <button class="btn btn-sm btn-outline-light rounded-pill"
+{#               hx-get="{% url 'menu:daily_menus_update' pk=object.id %}"#}
+{#               hx-target="body"#}
+{#               hx-swap="afterbegin"#}
+    >
+    <i class="fas fa-edit"></i>
+    </button>
+{#  Since the row gets replaced need to add csrf_token to the request manually see static/menu/js/list.js#}
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+    <button class="btn btn-sm btn-outline-danger rounded-pill"
+{#        hx-get="{% url 'menu:daily_menus_delete' pk=object.id %}"#}
+{#        hx-target="body"#}
+{#        hx-swap="afterbegin"#}
+    >
+        <i class="fas fa-trash"></i>
+    </button>
+    </td>
+</tr>

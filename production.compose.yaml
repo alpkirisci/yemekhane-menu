@@ -15,17 +15,18 @@ services:
       - db-password
     environment:
       - DJANGO_SETTINGS_MODULE=backend.settings.production
+      - REDIS_HOST=redis
 
     # mkdir -p /app/static /app/media && chmod -R 755 /app/static /app/media &&
     command: >
       sh -c "python manage.py collectstatic --noinput &&
              gunicorn --bind 0.0.0.0:8000 backend.wsgi:application"
-
-
-# server:
     depends_on:
-      db:
-        condition: service_healthy
+      - redis:
+          condition: service_healthy
+      - db:
+          condition: service_healthy
+
   db:
     image: postgres
     restart: always
@@ -55,6 +56,15 @@ services:
       - ./backend:/app
     depends_on:
       - backend
+
+
+  redis:
+    image: "redis:alpine"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 
 volumes:

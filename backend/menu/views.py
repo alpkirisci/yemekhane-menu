@@ -15,7 +15,7 @@ from django.views.generic import ListView, MonthArchiveView, CreateView, DeleteV
 from django.views.generic.detail import SingleObjectTemplateResponseMixin
 from django.views.generic.edit import ProcessFormView, ModelFormMixin
 
-from menu.forms import IngredientForm, CategoryForm, MenuItemForm, IngredientItemFormSet
+from menu.forms import IngredientForm, CategoryForm, MenuItemForm, IngredientItemFormSet, DailyMenuForm, MenuItemFormSet
 from menu.formset_views import FormSetUpdateView, FormSetCreateView
 from menu.models import Ingredient, Category, DailyMenu, MenuItem, IngredientItem
 
@@ -24,26 +24,15 @@ from menu.models import Ingredient, Category, DailyMenu, MenuItem, IngredientIte
 def dashboard(request):
     return render(request, 'dashboard/dashboard.html')
 
-@login_required
-def categories(request):
-    return render(request, 'dashboard/categories/index.html')
-
-@login_required
-def ingredients(request):
-    return render(request, 'dashboard/ingredients/index.html')
-
-@login_required
-def menu_items(request):
-    return render(request, 'dashboard/menu_items/index.html')
 
 @login_required
 def ingredient_requirements(request):
-    return render(request, 'dashboard/ingredient-requirements/base.html')
+    return render(request, 'dashboard/ingredient_requirements/base.html')
 
 def ingredient_requirements_table(request):
     """Calculate needed ingredients within given date range and display."""
     # TODO: Review ingredient_requirements_table
-    template_name = 'dashboard/ingredient-requirements/table.html'
+    template_name = 'dashboard/ingredient_requirements/table.html'
     paginate_by = 1000000  # Pagination currently on client-side.
 
     # Parameters to pass to template.
@@ -112,7 +101,7 @@ class MenuMonthArchiveView(MonthArchiveView):
         return context
 
 
-def daily_menu(request):
+def public_daily_menu(request):
     today = date.today()
     template_name = 'public/daily_menu.html'
     categories = Category.objects.all().order_by('-order')
@@ -127,6 +116,10 @@ def daily_menu(request):
         'menu': menu,
         'categories': categories,
     })
+
+@login_required
+def ingredients(request):
+    return render(request, 'dashboard/ingredients/index.html')
 
 
 class IngredientsListView(ListView):
@@ -191,6 +184,11 @@ class IngredientsUpdateView(UpdateView):
         return reverse("menu:ingredients_detail", kwargs={"pk": pk})
 
 
+@login_required
+def categories(request):
+    return render(request, 'dashboard/categories/index.html')
+
+
 class CategoriesListView(ListView):
     """Construct categories list."""
     model = Category
@@ -253,7 +251,13 @@ class CategoriesUpdateView(UpdateView):
         return reverse("menu:categories_detail", kwargs={"pk": pk})
 
 
+@login_required
+def menu_items(request):
+    return render(request, 'dashboard/menu_items/index.html')
+
+
 class MenuItemsListView(ListView):
+    """Construct menu_items list."""
     model = MenuItem
     template_name = 'dashboard/menu_items/container.html'
     paginate_by = 5
@@ -264,6 +268,7 @@ class MenuItemsListView(ListView):
 
 
 class MenuItemsListSearchView(MenuItemsListView):
+    """Construct menu_items list with search."""
     template_name = 'dashboard/menu_items/list.html'
 
     def get_queryset(self):
@@ -275,6 +280,7 @@ class MenuItemsListSearchView(MenuItemsListView):
 
 
 class MenuItemsDeleteView(DeleteView):
+    """Confirmation form and delete logic for menu_items record."""
     model = MenuItem
     template_name = 'dashboard/menu_items/confirm_delete.html'
 
@@ -285,6 +291,7 @@ class MenuItemsDeleteView(DeleteView):
 
 
 class MenuItemsDetailView(DetailView):
+    """Construct menu_items record for display."""
     model = MenuItem
     template_name = 'dashboard/menu_items/detail.html'
 
@@ -298,10 +305,6 @@ class MenuItemsUpdateView(FormSetUpdateView):
     formset_related_field = 'ingredients'
 
     def form_valid(self, form):
-        """Assign the current user to the updated_by field."""
-        print(50 * "*")
-        print(self.request.user)
-        print(50 * "*")
         form.instance.updated_by = self.request.user
         return super().form_valid(form)
 
@@ -315,10 +318,84 @@ class MenuItemsCreateView(FormSetCreateView):
     formset_related_field = 'ingredients'
 
     def form_valid(self, form):
-        """Assign the current user to the updated_by field."""
-        print(50 * "*")
-        print(self.request.user)
-        print(50 * "*")
+        form.instance.updated_by = self.request.user
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
+
+
+@login_required
+def daily_menus(request):
+    return render(request, 'dashboard/daily_menus/index.html')
+
+
+class DailyMenusListView(ListView):
+    """Construct menu_items list."""
+    model = DailyMenu
+    template_name = 'dashboard/daily_menus/container.html'
+    paginate_by = 5
+    ordering = '-id'
+
+    def get_queryset(self):
+        return super().get_queryset().filter(is_active=True)
+
+
+class DailyMenusListSearchView(DailyMenusListView):
+    """Construct menu_items list with search."""
+    template_name = 'dashboard/daily_menus/list.html'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        start_date = self.request.GET.get('start_date')
+        end_date = self.request.GET.get('end_date')
+
+        if start_date and end_date:
+            queryset = queryset.filter(served_at__range=[start_date, end_date])
+        return queryset
+
+
+# class MenuItemsDeleteView(DeleteView):
+#     """Confirmation form and delete logic for menu_items record."""
+#     model = MenuItem
+#     template_name = 'dashboard/menu_items/confirm_delete.html'
+#
+#     def form_valid(self, form):
+#         self.object.is_active = False
+#         self.object.save()
+#         return redirect('menu:menu_items_list')
+#
+#
+class DailyMenusDetailView(DetailView):
+    """Construct menu_items record for display."""
+    model = DailyMenu
+    template_name = 'dashboard/daily_menus/detail.html'
+
+#
+# class MenuItemsUpdateView(FormSetUpdateView):
+#     model = MenuItem
+#     template_name = 'dashboard/menu_items/update.html'
+#     form_class = MenuItemForm
+#     success_url = reverse_lazy('menu:menu_items_index')
+#     formset_class = IngredientItemFormSet
+#     formset_related_field = 'ingredients'
+#
+#     def form_valid(self, form):
+#         """Assign the current user to the updated_by field."""
+#         form.instance.updated_by = self.request.user
+#         form.instance.created_by = self.request.user
+#         return super().form_valid(form)
+#
+#
+class DailyMenusCreateView(FormSetCreateView):
+    # TODO
+    model = DailyMenu
+    template_name = 'dashboard/daily_menus/create.html'
+    form_class = DailyMenuForm
+    success_url = reverse_lazy('menu:daily_menus_index')
+    formset_class = MenuItemFormSet
+    formset_related_field = 'menu_items'
+
+    def form_valid(self, form):
+        form.instance.updated_by = self.request.user
         form.instance.created_by = self.request.user
         return super().form_valid(form)
 

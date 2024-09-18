@@ -1,0 +1,53 @@
+    <!-- Table Search and Add Button -->
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h3 class="text-light mb-0">Menüler</h3>
+        <div class="d-flex col-md-6">
+            <form id="form_date_search"
+                  hx-get="{% url 'menu:daily_menus_list' %}"
+                  hx-target="#list-daily_menus"
+                  hx-swap="outerHTML"
+                  hx-trigger="date_search"
+                  class="d-flex flex-wrap align-items-end w-100"
+            >
+                {% csrf_token %}
+                <div class="input-group input-group-lg me-3 justify-content-evenly w-100">
+                    <div class="col-md-4">
+                        <label for="start_date" class="form-label">Başlangıç Tarihi</label>
+                        <input type="date"
+                               class="form-control bg-dark text-white date-input"
+                               id="start_date"
+                               name="start_date"
+                        >
+                    </div>
+                    <div class="col-md-4">
+                        <label for="end_date" class="form-label">Bitiş Tarihi</label>
+                        <input type="date"
+                               class="form-control bg-dark text-white date-input"
+                               id="end_date"
+                               name="end_date"
+                        >
+                    </div>
+                    <div class="col-md-2 d-flex justify-content-end">
+                        <a class="btn btn-sm btn-success rounded-pill align-self-end mb-1"
+                           style="height:fit-content;"
+                           hx-get="{% url 'menu:daily_menus_create' %}"
+                           hx-target="body"
+                           hx-swap="afterbegin"
+                        >
+                            <i class="fa fa-add"></i>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        $(function(){
+            $("#start_date, #end_date").on("input", function(){
+                let event = new Event("date_search"); // Create a new event each time
+                document.getElementById('form_date_search').dispatchEvent(event);
+            });
+        })
+    </script>

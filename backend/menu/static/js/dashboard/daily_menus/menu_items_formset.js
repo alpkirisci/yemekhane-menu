@@ -3,10 +3,12 @@ $(document).ready(function(){
     // Remove if there is already a backdrop
     $(".modal-backdrop").remove()
     // Show modal when rendered
-    $("#menu_items-modal").modal('show');
+    // Initialize all Select2 widgets on page load
+    $('.django-select2').select2();
+    $("#daily_menus-modal").modal('show');
     // Close model when POSTing
     $("#request_submitter").click(function(){
-        $("#menu_items-modal").modal('hide')
+        $("#daily_menus-modal").modal('hide')
     });
 
     // Hide formset.DELETE when rendered
@@ -26,7 +28,7 @@ $(document).ready(function(){
     })
 
 
-    // Add IngredientItem
+    // Add MenuItem
     let addButton = $('#add-row-btn');
     let managerTotal = $('#id_form-TOTAL_FORMS');
     // Saves empty row since extra=1 in forms.

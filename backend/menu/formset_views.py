@@ -20,8 +20,6 @@ class BaseFormSetView(ModelFormMixin, ProcessFormView):
         # If there is an associated object use it.
         if self.object is not None:
             related_field = self.formset_related_field
-            if related_field is None:
-                raise ValueError("You must define 'formset_related_field' in the view.")
             return getattr(self.object, related_field).all()
         else:
             return self.model.objects.none()
@@ -34,16 +32,12 @@ class BaseFormSetView(ModelFormMixin, ProcessFormView):
 
     def post(self, request, *args, **kwargs):
         """Build formset with POST request"""
-        if self.formset_class is None:
-            raise ValueError("You must define 'formset_class' in the view.")
         # Construct formset
         self.formset = self.formset_class(request.POST)
         return super().post(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         """Build formset with GET request"""
-        if self.formset_class is None:
-            raise ValueError("You must define 'formset_class' in the view.")
         # Construct formset
         self.formset = self.formset_class(queryset=self.get_formset_queryset())
         return super().get(request, *args, **kwargs)

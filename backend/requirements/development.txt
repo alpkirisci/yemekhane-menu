@@ -5,3 +5,4 @@ sqlparse==0.5.1
 tzdata==2024.1
 django-environ==0.11.2
 django-htmx
+django-redis

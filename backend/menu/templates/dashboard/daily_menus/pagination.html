@@ -1,0 +1,63 @@
+<nav>
+    <ul class="pagination justify-content-center pagination-dark">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link text-light bg-dark"
+                   hx-get="{% url 'menu:menu_items_list' %}?page={{ page_obj.previous_page_number }}"
+                   hx-target="#list-menu_items"
+                   hx-swap="outerHTML"
+                   hx-trigger="click"
+                   hx-include="[name='search_name']"
+                >
+                    <span>&laquo;</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link text-secondary bg-dark">
+                    <span>&laquo;</span>
+                </a>
+            </li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <li class="page-item active">
+                    <span class="page-link text-light bg-dark">{{ num }}</span>
+                </li>
+            {% else %}
+                <li class="page-item">
+                <a class="page-link text-light bg-dark"
+                   hx-get="{% url 'menu:menu_items_list' %}?page={{ num }}"
+                   hx-target="#list-menu_items"
+                   hx-swap="outerHTML"
+                   hx-trigger="click"
+                   hx-include="[name='search_name']"
+                >
+                    {{ num }}
+                </a>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link text-light bg-dark"
+                   hx-get="{% url 'menu:menu_items_list' %}?page={{ page_obj.next_page_number }}"
+                   hx-target="#list-menu_items"
+                   hx-swap="outerHTML"
+                   hx-trigger="click"
+                   hx-include="[name='search_name']"
+                >
+                    <span>&raquo;</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link text-secondary bg-dark">
+                    <span>&raquo;</span>
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>

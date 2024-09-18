@@ -25,4 +25,7 @@ urlpatterns = [
     path("authentication/", include(("authentication.urls","authentication"), namespace="authentication")),
 
     path("admin/", admin.site.urls),
+
+    path("select2/", include("django_select2.urls")),
+
 ] + static(base.STATIC_URL, document_root=base.STATIC_ROOT)

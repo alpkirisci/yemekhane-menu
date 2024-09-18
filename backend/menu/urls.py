@@ -35,15 +35,20 @@ menu_items_patterns = [
 ]
 
 daily_menus_patterns = [
-
+    path('', views.daily_menus, name='daily_menus_index'),
+    path("container/", views.DailyMenusListView.as_view(), name="daily_menus_container"),
+    path("list/", views.DailyMenusListSearchView.as_view(), name="daily_menus_list"),
+    # path("delete/<str:pk>/", views.DailyMenusDeleteView.as_view(), name="daily_menus_delete"),
+    path("detail/<str:pk>/", views.DailyMenusDetailView.as_view(), name="daily_menus_detail"),
+    path("create/", views.DailyMenusCreateView.as_view(), name="daily_menus_create"),
+    # path("update/<str:pk>/", views.DailyMenusUpdateView.as_view(), name="daily_menus_update"),
 ]
 
 ingredient_requirements_patterns = [
     path("", views.ingredient_requirements,
-         name="ingredient-requirements"),
+         name="ingredient_requirements"),
     path("table/", views.ingredient_requirements_table,
-         name="ingredient-requirements-table"),
-
+         name="ingredient_requirements-table"),
 ]
 
 
@@ -58,7 +63,7 @@ dashboard_patterns = [
 ]
 
 public_patterns = [
-    path("daily-menu/", views.daily_menu, name="daily_menu"),
+    path("daily-menu/", views.public_daily_menu, name="daily_menu"),
     path("monthly-menu/", views.MenuMonthArchiveView.as_view(
         year=datetime.today().year, month=datetime.today().month
     ), name="monthly_menu", ),

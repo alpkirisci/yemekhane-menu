@@ -1,23 +1,7 @@
 from datetime import date, timedelta
-
 from django import template
-from django.urls import reverse
-
-from menu.models import DailyMenu
 
 register = template.Library()
-
-@register.filter
-def get_attr(obj, attr_name):
-    try:
-        return getattr(obj, attr_name)
-    except AttributeError:
-        return None
-
-
-@register.simple_tag
-def dynamic_url(view_name, *args, **kwargs):
-    return reverse(view_name, args=args, kwargs=kwargs)
 
 
 @register.filter
@@ -40,9 +24,11 @@ def get_card_class(day):
     else:
         return "future-card-header"
 
+
 @register.filter
 def is_weekend(day):
     return day.weekday in [5,6]
+
 
 @register.filter
 def category_in_menu_items(menu, category):

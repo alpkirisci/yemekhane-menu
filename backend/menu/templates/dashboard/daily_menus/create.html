@@ -1,16 +1,16 @@
 {% load static %}
-<div class="modal" tabindex="-1" id="menu_items-modal">
+<div class="modal" tabindex="-1" id="daily_menus-modal">
     <div class="modal-dialog">
         <div class="modal-content bg-dark border-light">
-            <form hx-post="{% url 'menu:menu_items_update' pk=object.id %}"
-                  hx-target="#menu_items-modal"
+            <form hx-post="{% url 'menu:daily_menus_create' %}"
+                  hx-target="#daily_menus-modal"
                   hx-swap="outerHTML"
             >
                 {% csrf_token %}
 
 
                 <div class="modal-header">
-                    <h5 class="modal-title">Yemek Düzenle</h5>
+                    <h5 class="modal-title">Yemek Oluştur</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -27,7 +27,7 @@
                         </div>
                     {% endif %}
                     {% for form in formset %}
-                        <div class="row">
+                        <div class="row mb-3">
                             {% if form.non_field_errors %}
                                 <div class="alert alert-danger">
                                     <ul>
@@ -38,12 +38,12 @@
                                 </div>
                             {% endif %}
                             <div class="col-md-5">
-                                {{ form.ingredient.label_tag }}
-                                {{ form.ingredient }}
-                                {% if form.ingredient.errors %}
+                                {{ form.name.label_tag }}
+                                {{ form.name }}
+                                {% if form.name.errors %}
                                     <div class="text-danger">
                                         <ul>
-                                            {% for error in form.ingredient.errors %}
+                                            {% for error in form.name.errors %}
                                                 <li>{{ error }}</li>
                                             {% endfor %}
                                         </ul>
@@ -51,14 +51,12 @@
                                 {% endif %}
                             </div>
                             <div class="col-md-5">
-                                <label for="{{ form.quantity.id_for_label }}" id="label-{{ form.quantity.id_for_label }}">
-                                    {{ form.quantity.label }} (<span class="unit-type"></span>):
-                                </label>
-                                {{ form.quantity }}
-                                {% if form.quantity.errors %}
+                                {{ form.name.label_tag }}
+                                {{ form.name }}
+                                {% if form.name.errors %}
                                     <div class="text-danger">
                                         <ul>
-                                            {% for error in form.quantity.errors %}
+                                            {% for error in form.name.errors %}
                                                 <li>{{ error }}</li>
                                             {% endfor %}
                                         </ul>
@@ -70,7 +68,6 @@
                                 <button type="button" class="btn btn-sm btn-outline-danger rounded-pill delete-btn">
                                     <i class="fas fa-trash"></i>
                                 </button>
-                                {{ form.id }}
                             </div>
                         </div>
                     {% endfor %}
@@ -82,11 +79,11 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>
-                    <input id="request_submitter" type="submit" class="btn btn-primary" value="Onay">
+                    <input type="submit" class="btn btn-primary" value="Onay">
                 </div>
             </form>
         </div>
     </div>
 </div>
-<script src="{% static 'js/dashboard/menu_items/ingredient_items_formset.js' %}"></script>
+<script src="{% static 'js/dashboard/daily_menus/menu_items_formset.js' %}"></script>
 

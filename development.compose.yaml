@@ -17,9 +17,10 @@ services:
       - db-password
     environment:
       - DJANGO_SETTINGS_MODULE=backend.settings.development
-
-# server:
+      - REDIS_HOST=redis
     depends_on:
+      redis:
+        condition: service_healthy
       db:
         condition: service_healthy
   db:
@@ -44,6 +45,14 @@ services:
       timeout: 5s
       retries: 5
 
+
+  redis:
+    image: "redis:alpine"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   db-data:

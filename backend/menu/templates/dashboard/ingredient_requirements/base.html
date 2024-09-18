@@ -3,14 +3,14 @@
 
 {% block title %}Malzeme İhtiyaçları{% endblock %}
 {% block extra_css %}
-    <link href="{% static 'css/dashboard/ingredient_requirements.css' %}" rel="stylesheet">
+    <link href="{% static 'css/dashboard/ingredient_requirements/ingredient_requirements.css' %}" rel="stylesheet">
 
 {% endblock %}
 
 {% block content %}
     <div class="container mb-5">
         <div class="row">
-            {% include 'dashboard/ingredient-requirements/header.html' %}
+            {% include 'dashboard/ingredient_requirements/header.html' %}
             <div id="requirements-table">
 
             </div>
@@ -21,6 +21,6 @@
 {% endblock %}
 
 {% block extra_js %}
-    <script src="{% static 'js/dashboard/ingredient_requirements.js' %}"></script>
+    <script src="{% static 'js/dashboard/ingredient_requirements/ingredient_requirements.js' %}"></script>
 
 {% endblock %}

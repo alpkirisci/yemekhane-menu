@@ -25,18 +25,6 @@ env = environ.Env()
 env_file = os.path.join(os.path.join(BASE_DIR, "./"), '.env')
 env.read_env(env_file)
 
-# print(50 * "*")
-# print(BASE_DIR)
-# print(env_file)
-# print(env)
-# print(50 * "*")
-
-# Debugging prints to check the loaded environment variables
-# print(50 * "*")
-# print(env('POSTGRES_DB'))  # Example to check if DEBUG is loaded
-# print(env('POSTGRES_USER'))  # Example to check if SECRET_KEY is loaded
-# print(50 * "*")
-
 # Function to read secrets (e.g., from Docker secrets)
 def read_secret(secret_name):
     try:
@@ -65,6 +53,7 @@ INSTALLED_APPS = [
     "django_htmx",
     'authentication.apps.AuthenticationConfig',
     'django.contrib.postgres',
+    'django_select2',
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -182,3 +171,10 @@ LOGOUT_REDIRECT_URL = '/authentication/login'
 LOGIN_URL = 'authentication:login'
 LOGOUT_URL = 'authentication:logout'
 
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379",
+    }
+}
